@@ -25,7 +25,7 @@ fn format_lotto_results(lotto: &Lotto) -> String {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    todo!("Implement CLI")
+    println!("{}, {}", &args[1], &args[2])
 }
 
 #[test]
