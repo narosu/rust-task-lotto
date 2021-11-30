@@ -1,7 +1,10 @@
 use core::num;
 use std::{env, mem::take};
 
-use rand::{Rng, prelude::{IteratorRandom, SliceRandom}, thread_rng};
+use rand::{
+    prelude::{IteratorRandom, SliceRandom},
+    thread_rng, Rng,
+};
 
 struct Lotto {
     take: usize,
@@ -11,20 +14,22 @@ struct Lotto {
 
 impl Lotto {
     fn new(take: usize, from: usize) -> Self {
-        //Lotto {take,from,numbers:self.get}
-        
+        let mut rng = thread_rng();
+        let mut numbers: Vec<usize> = Vec::new();
+        let nrpool: Vec<usize> = (1..from).collect();
+
+        for _x in 1..take {
+            numbers.push(*nrpool.choose(&mut rng).unwrap());
+        }
+        Lotto {
+            take,
+            from,
+            numbers: numbers,
+        }
     }
 
     fn get_numbers(self) -> Vec<usize> {
-        let mut numbers:Vec<usize> = Vec::new();
-        let mut rng = thread_rng();
-        let nrpool:Vec<usize> = (1..self.from).collect();
-        
-        for _x in 1..self.take {
-            numbers.push(*nrpool.choose(&mut rng).unwrap());
-        }
-        println!("{:?}",&self.numbers);
-        return numbers
+        self.numbers
     }
 }
 
@@ -36,11 +41,11 @@ fn format_lotto_results(lotto: &Lotto) -> String {
 fn main() {
     let args: Vec<String> = env::args().collect();
     //println!("{}, {}", &args[1], &args[2]);
-    let take:usize = args[1].parse().expect("Could not parse value for takes");
-    let from:usize = args[2].parse().expect("Could not parse value for numbers");
-    let lotto = Lotto::new(take,from);
-    lotto.numbers = lotto.get_numbers();
-    println!("{:?}",&lotto.numbers);
+    let take: usize = args[1].parse().expect("Could not parse value for takes");
+    let from: usize = args[2].parse().expect("Could not parse value for numbers");
+    let lotto = Lotto::new(take, from);
+
+    println!("{:?}", &lotto.get_numbers());
 }
 
 #[test]
